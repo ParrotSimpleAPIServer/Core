@@ -32,7 +32,10 @@ cd Core
 ```bash
 pip install -r requirements.txt
 ```
-5.Start
+5.Download the i18n support files from the warehouse and place them in the Core folder.
+`https://github.com/ParrotSimpleAPIServer/i18n/blob/main/i18n.py`
+
+6.Start
 ```bash
 python main.py
 ```
