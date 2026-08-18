@@ -18,21 +18,19 @@ except:
     print("[FatalError] Can't load 'i18n.py', please fix this problem.")
     sys.exit(1)
 
-version = "1.0.beta1"
+version = "1.0.beta2"
 api_version = 1.0
 
 lang = i18n.en_us
 
-statics_whitelist = ['marked.min.js', 'particles.js', 'markdown-light.min.css']
-
-def defix(dtype):
+def prefix(dtype):
     """
     i:Info
     w:Warn
     e:Error
     """
-    defix_list = {"i":"[cyan]Info[/]","w":"[yellow]Warn[/]","e":"[red]Error[/]"}
-    return(f"[{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}][{defix_list[dtype]}]")
+    prefix_list = {"i":"[cyan]Info[/]","w":"[yellow]Warn[/]","e":"[red]Error[/]"}
+    return(f"[{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}][{prefix_list[dtype]}]")
 
 def rp(text):
     rich.print(f"{text}")
@@ -46,28 +44,34 @@ def reponses(data_block):
     return response_data
 
 dirs = ['plugins', 'configs', 'statics']
-rp(f'{defix("i")}{lang.server.start.dircheck}')
+rp(f'{prefix("i")}{lang.server.start.dircheck}')
 for i in dirs:
     if not os.path.isdir(i):
-        rp(f"{defix('i')}{lang.server.start.dircreate}'{i}'")
+        rp(f"{prefix('i')}{lang.server.start.dircreate}'{i}'")
         os.makedirs(i)
 
-rp(f'{defix("i")}{lang.server.start.loadconfig.info}')
+rp(f'{prefix("i")}{lang.server.start.loadconfig.info}')
 try:
     if os.path.isfile('configs/main.toml'):
         with open('configs/main.toml','rb') as file_temp:
             Main_config = tomllib.load(file_temp)
     else:
         with open('configs/main.toml','w') as file_temp:
-            file_temp.write(f'''[Server]\n\nPort = 5000\n#{lang.server.confignote.server.port}\n\nThreads = 4\n#{lang.server.confignote.server.threads}\n\nConnectionLimit = 100\n#{lang.server.confignote.server.connectionlimit}\n\nSendDebugInfo = true\n#{lang.server.confignote.server.senddebuginfo}\n\n[Plugins]\n\nURL = "api"\n#{lang.server.confignote.plugins.url}\n\nCheckApiVersion = true\n#{lang.server.confignote.plugins.checkapiversion}\n\nAvoidFunctionOverride = true\n#{lang.server.confignote.plugins.avoidfunctionoverride}\n\n[Statics]\n\nEnabled = true\n#{lang.server.confignote.statics.enabled.t1}\n#{lang.server.confignote.statics.enabled.t2}\n\nWhiteList = true\n#{lang.server.confignote.statics.whitelist}\n\n[Debugger]\n\nEnabled = true\n#{lang.server.confignote.debugger.enabled.t1}\n#{lang.server.confignote.debugger.t2}''')
-        rp(f"{defix('w')}Config file has created , please restart PSAS")
+            file_temp.write(f'''[Server]\n\nPort = 5000\n#{lang.server.confignote.server.port}\n\nThreads = 4\n#{lang.server.confignote.server.threads}\n\nConnectionLimit = 100\n#{lang.server.confignote.server.connectionlimit}\n\nSendDebugInfo = true\n#{lang.server.confignote.server.senddebuginfo}\n\n[Plugins]\n\nURL = "api"\n#{lang.server.confignote.plugins.url}\n\nCheckApiVersion = true\n#{lang.server.confignote.plugins.checkapiversion}\n\nAvoidFunctionOverride = true\n#{lang.server.confignote.plugins.avoidfunctionoverride}\n\n[Statics]\n\nEnabled = true\n#{lang.server.confignote.statics.enabled.t1}\n#{lang.server.confignote.statics.enabled.t2}\n\nWhiteList = true\n#{lang.server.confignote.statics.whitelist}\n\n[Debugger]\n\nEnabled = true\n#{lang.server.confignote.debugger.enabled.t1}\n#{lang.server.confignote.debugger.enabled.t2}''')
+        rp(f"{prefix('w')}Config file has created , please restart PSAS")
         sys.exit(0)
+    if os.path.isfile('configs/staticswhitelist.txt'):
+        with open('configs/staticswhitelist.txt','r', encoding='utf-8') as file_temp:
+            statics_whitelist = file_temp.read().rstrip('\n')[1:]
+    else:
+        with open('configs/staticswhitelist.txt','w') as file_temp:
+            file_temp.write("# Each line corresponds to a file name, and the first line will be regarded as a comment and will not be read.")
+        statics_whitelist = []
 except Exception as e:
-    rp(f"{defix('e')}{lang.server.start.loadconfig.fail}: {e}")
+    rp(f"{prefix('e')}{lang.server.start.loadconfig.fail}: {e}")
     sys.exit(1)
-    
 
-rp(f'{defix("i")}{lang.server.start.scanplugin}...')
+rp(f'{prefix("i")}{lang.server.start.scanplugin}...')
 exes = os.listdir('plugins')
 mounted_plugins = []
 plugins_register = {}
@@ -75,7 +79,7 @@ plugins_register = {}
 plugins_count = 0
 for i in exes:
     plugins_count += 1
-    rp(f"{defix('i')}{lang.server.start.loading.info}'{i}'({plugins_count}/{len(exes)})")
+    rp(f"{prefix('i')}{lang.server.start.loading.info}'{i}'({plugins_count}/{len(exes)})")
     try:
         exec(f"import {i}")
         try:
@@ -83,27 +87,27 @@ for i in exes:
             conflict_list = list(set(plugins_register) & set(one_plugins_register_temp.commands))
             if Main_config['Plugins']['AvoidFunctionOverride']:
                 if len(conflict_list) != 0:
-                    rp(f"{defix('w')}{lang.server.start.loading.registeroverridewarn.text.front}'{i}'{lang.server.start.loading.registeroverridewarn.text.behind}")
+                    rp(f"{prefix('w')}{lang.server.start.loading.registeroverridewarn.text.front}'{i}'{lang.server.start.loading.registeroverridewarn.text.behind}")
                     for i in conflict_list:
                         rp(f"{i}[{one_plugins_register_temp.commands[i]}] -> {plugins_register[i]}")
                         one_plugins_register_temp.commands.pop(i)
         except AttributeError:
-            rp(f"{defix('e')}{lang.server.start.loading.invalidregisterwarn.text.front}'{i}'{lang.server.start.loading.invalidregisterwarn.text.behind}")
+            rp(f"{prefix('e')}{lang.server.start.loading.invalidregisterwarn.text.front}'{i}'{lang.server.start.loading.invalidregisterwarn.text.behind}")
             break
         plugins_register.update(one_plugins_register_temp.commands)
         if Main_config['Plugins']['CheckApiVersion']:
             if one_plugins_register_temp.version != api_version:
-                rp(f"{defix('w')}{lang.server.start.loading.apiversionwarn.text.front}'{i}'{lang.server.start.loading.apiversionwarn.text.behind}: {one_plugins_register_temp.version} -> PSAS:v{api_version}")
+                rp(f"{prefix('w')}{lang.server.start.loading.apiversionwarn.text.front}'{i}'{lang.server.start.loading.apiversionwarn.text.behind}: {one_plugins_register_temp.version} -> PSAS:v{api_version}")
         mounted_plugins.append(i)
     except Exception as e:
-        rp(f"{defix('e')}{lang.server.start.loading.loadfail.text.front}'{i}'{lang.server.start.loading.loadfail.text.behind}: {e}")
+        rp(f"{prefix('e')}{lang.server.start.loading.loadfail.text.front}'{i}'{lang.server.start.loading.loadfail.text.behind}: {e}")
 
-rp(f'{defix("i")}{lang.server.start.indexpage.info}')
+rp(f'{prefix("i")}{lang.server.start.indexpage.info}')
 try:
     with open('index.html','r') as file_temp:
         index_page = file_temp.read()
 except Exception as e:
-    rp(f"{defix('e')}{lang.server.start.indexpage.fail}: {e}")
+    rp(f"{prefix('e')}{lang.server.start.indexpage.fail}: {e}")
     index_page = "ParrotSimpleAPIServer"
 
 end_time = time.time()
@@ -117,7 +121,11 @@ rich.print(Panel(f'''{lang.server.infopanel.port}: {Main_config["Server"]["Port"
 {lang.server.infopanel.register}: {len(plugins_register)}'''
 ,title=f"ParrotSimpleAPIServer v{version}"))
 
-app = Flask(__name__)
+if __name__ == "__main__":
+    app = Flask(__name__)
+else:
+    rp(f"{prefix('e')}This program was called as a function.")
+    sys.exit(1)
 
 app.config['DEBUG'] = True
 
@@ -174,7 +182,7 @@ def run_main(functions):
         }
         action_temp = f"{plugins_register[functions]}(input_api_data)"
         if len(plugins_register[functions].split(".")) == 1:
-            rp(f"{defix("w")}{lang.client.errors.mainfunction.voidregistry.text.front}'{plugins_register[functions]}'{lang.client.errors.mainfunction.voidregistry.text.behind}")
+            rp(f"{prefix('w')}{lang.client.errors.mainfunction.voidregistry.text.front}'{plugins_register[functions]}'{lang.client.errors.mainfunction.voidregistry.text.behind}")
         try:
             plugin_output = eval(action_temp)
             if type(plugin_output) == str:
@@ -184,7 +192,7 @@ def run_main(functions):
             else:
                 return reponses(plugin_output)
         except Exception as e:
-            rp(f"{defix("e")}'{plugins_register[functions]}': {e}")
+            rp(f"{prefix('e')}'{plugins_register[functions]}': {e}")
             if Main_config["Server"]["SendDebugInfo"]:
                 return reponses({'code':500 , 'msg':f"{lang.client.errors.mainfunction.failure.allowoutput.text.front}'{plugins_register[functions]}'{lang.client.errors.mainfunction.failure.allowoutput.text.front}: {e}", 'data':'Please contact the administrator'})
             else:
