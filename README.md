@@ -44,6 +44,7 @@ Typically these files are:
 * plugins/
 * statics/
 * configs/main.toml
+* configs/staticswhitelist.txt
 
 # Plugin System
 The plugin file structure is similar to Python modules.  
