@@ -5,10 +5,6 @@ import sys
 import tomllib
 from flask import Flask, request, make_response, Response
 from waitress import serve
-try:
-    import rich
-except:
-    os.system("python -m pip install rich")
 import rich
 from rich.panel import Panel
 
