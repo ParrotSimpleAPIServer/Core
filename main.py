@@ -133,7 +133,7 @@ app.config['DEBUG'] = True
 def index():
     index_temp = ""
     for i in plugins_register.keys():
-        index_temp += f"  \n[{i}](/{Main_config["Plugins"]["URL"]}/{i})  \n> **{plugins_register[i]}**  \n"
+        index_temp += f"  \n[{i}](/{Main_config['Plugins']['URL']}/{i})  \n> **{plugins_register[i]}**  \n"
     index_temp = index_page.replace("[[STATUS]]",index_temp)
     return index_temp, 200
     
