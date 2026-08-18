@@ -18,7 +18,7 @@ except:
     print("[FatalError] Can't load 'i18n.py', please fix this problem.")
     sys.exit(1)
 
-version = "1.0.00"
+version = "1.0.beta1"
 api_version = 1.0
 
 lang = i18n.en_us
