@@ -45,6 +45,7 @@ PSAS会在第一次启动时自动补全文件夹与配置文件
 * plugins/
 * statics/
 * configs/main.toml
+* configs/staticswhitelist.txt
 
 # 插件系统
 插件的文件结构与python模块类似  
