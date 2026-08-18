@@ -194,7 +194,7 @@ def run_main(functions):
         except Exception as e:
             rp(f"{prefix('e')}'{plugins_register[functions]}': {e}")
             if Main_config["Server"]["SendDebugInfo"]:
-                return reponses({'code':500 , 'msg':f"{lang.client.errors.mainfunction.failure.allowoutput.text.front}'{plugins_register[functions]}'{lang.client.errors.mainfunction.failure.allowoutput.text.front}: {e}", 'data':'Please contact the administrator'})
+                return reponses({'code':500 , 'msg':f"{lang.client.errors.mainfunction.failure.allowoutput.text.front}'{plugins_register[functions]}'{lang.client.errors.mainfunction.failure.allowoutput.text.behind}: {e}", 'data':'Please contact the administrator'})
             else:
                 return reponses({'code':500 , 'msg':f"{lang.client.errors.mainfunction.failure.notallowoutput.text}'{plugins_register[functions]}'", 'data':'Please contact the administrator'})
     else:
