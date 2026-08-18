@@ -3,6 +3,8 @@
 PSAS是一个基于插件的API服务器    
 使用导入模块的方法实现插件挂载
 
+Language：[en_us](README.md) zh_cn
+
 # 特性
 
 * 极简 单文件核心
